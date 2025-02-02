@@ -21,7 +21,7 @@ class TodoList extends StatelessWidget {
 
                return ListTile(
                  title: Text(todo.name),
-                 leading: Text(todo.createAt),
+                 leading: Text('${todo.createAt}'),
                );
                }
            );

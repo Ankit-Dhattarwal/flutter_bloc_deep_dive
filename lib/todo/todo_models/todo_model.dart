@@ -1,9 +1,12 @@
 class Todo{
   final String name;
-  final String createAt;
+  final DateTime createAt;
 
   Todo({
     required this.name,
     required this.createAt
   });
+
+  @override
+  String toString() => 'Todo(name: $name, createdAt: $createAt)';
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_deep_dive_bloc_with_project/bloc/counter_bloc.dart';
 import 'package:flutter_deep_dive_bloc_with_project/cubit/counter_cubit.dart';
+import 'package:flutter_deep_dive_bloc_with_project/cubit/inc_dec_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,18 +13,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiBlocProvider(
+
+      providers: [
+        BlocProvider(
+        create: (_) => CounterCubit(),
+        ),
+        BlocProvider(
+          create: (_) => CounterBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -37,53 +50,39 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final counterCubit = CounterCubit();
-  @override
   Widget build(BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: Text(widget.title),
-          ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'You have pushed the button this many times:',
-                ),
-                BlocBuilder<CounterCubit, int>(
-                    bloc: counterCubit,
-                    builder: (context, counter) {
-                    return Text(
-                      '$counter',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    );
-                  }
-                ),
-              ],
+    final counterCubit = BlocProvider.of<CounterCubit>(context);
+    final counterBloc = BlocProvider.of<CounterBloc>(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
             ),
-          ),
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                onPressed: () => counterCubit.increment(),
-                tooltip: 'Increment',
-                child: const Icon(Icons.add),
-              ),
-              const SizedBox(height: 16,),
-              FloatingActionButton(
-                onPressed: () => counterCubit.decrement(),
-                tooltip: 'Decrement',
-                child: const Icon(Icons.minimize),
-              ),
-            ],
-          ), // This trailing comma makes auto-formatting nicer for build methods.
-        );
+            BlocBuilder<CounterBloc, int>(
+                // bloc: counterCubit,
+                builder: (context, counter) {
+                  return Text(
+                    '$counter',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  );
+                }),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const IncDecPage()));
+        },
+        child: const Icon(Icons.navigate_next_rounded),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
 }

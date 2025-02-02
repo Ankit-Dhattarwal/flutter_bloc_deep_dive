@@ -7,6 +7,10 @@ class TodoCubit extends Cubit<List<Todo>>{
   TodoCubit(): super([]);
 
   void addTodo(String title){
+    if(title.isEmpty){
+      addError('Title cannot be empty!');
+      return;
+    }
     final todo = Todo(name: title, createAt: DateTime.now());
 
  //   state.add(todo);
@@ -18,5 +22,13 @@ class TodoCubit extends Cubit<List<Todo>>{
     // TODO: implement onChange
     super.onChange(change);
     print('Todo-$change');
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    // TODO: implement onError
+    super.onError(error, stackTrace);
+    print('Todo-Error: $error');
+
   }
 }

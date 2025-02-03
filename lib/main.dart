@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_deep_dive_bloc_with_project/login-form-validation/bloc/auth_bloc.dart';
 import 'package:flutter_deep_dive_bloc_with_project/login-form-validation/login_screen.dart';
+import 'package:flutter_deep_dive_bloc_with_project/login-form-validation/widgets/app_bloc_observer.dart';
 
 import 'app_color.dart';
 
 void main() {
+  Bloc.observer = AppBlocObserver();
   runApp(const MyApp());
 }
 
